@@ -8,7 +8,11 @@ with open("input.txt") as file:
       line = line.strip().split(":")[1]
 
       games = line.split(";")
-      game_valid = True
+
+      min_red = 0
+      min_green = 0
+      min_blue = 0
+
       for game in games:
          red_cubes = 0
          green_cubes = 0
@@ -25,12 +29,17 @@ with open("input.txt") as file:
          blue_str = re.search(r"\d+ blue", game)
          if blue_str:
             blue_cubes = int(blue_str[0].strip(" blue"))
+         
+         if red_cubes > min_red:
+            min_red = red_cubes
 
-         if red_cubes > 12 or green_cubes > 13 or blue_cubes > 14:
-            game_valid = False
+         if green_cubes > min_green:
+            min_green = green_cubes
 
-      if game_valid:
-         sum += game_id
+         if blue_cubes > min_blue:
+            min_blue = blue_cubes
+
+      sum += min_red*min_green*min_blue
 
 print(sum)
             
