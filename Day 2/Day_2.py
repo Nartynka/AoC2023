@@ -1,0 +1,36 @@
+import re
+
+sum = 0
+
+with open("input.txt") as file:
+   for line in file:
+      game_id = int(line.split(":")[0].split("Game")[1])
+      line = line.strip().split(":")[1]
+
+      games = line.split(";")
+      game_valid = True
+      for game in games:
+         red_cubes = 0
+         green_cubes = 0
+         blue_cubes = 0
+
+         red_str = re.search(r"\d+ red", game)
+         if red_str:
+            red_cubes = int(red_str[0].strip(" red"))
+
+         green_str = re.search(r"\d+ green", game)
+         if green_str:
+            green_cubes = int(green_str[0].strip(" green"))
+
+         blue_str = re.search(r"\d+ blue", game)
+         if blue_str:
+            blue_cubes = int(blue_str[0].strip(" blue"))
+
+         if red_cubes > 12 or green_cubes > 13 or blue_cubes > 14:
+            game_valid = False
+
+      if game_valid:
+         sum += game_id
+
+print(sum)
+            
