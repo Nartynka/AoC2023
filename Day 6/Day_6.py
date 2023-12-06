@@ -1,30 +1,21 @@
-import re
-
-sum = 1
-
 file = open("input.txt")
 
-times = file.readline().strip("Time: ").split("     ")
-max_distances = file.readline().strip("Distance: ").split("  ")
+time = int(file.readline().strip("Time: ").replace(" ", ""))
+max_distance = int(file.readline().strip("Distance: ").replace(" ", ""))
 
-times = [int(num) for num in times]
-max_distances = [int(num) for num in max_distances]
+num_of_ways = 0
 
-for idx, time in enumerate(times):
-   num_of_ways = 0
-   for i in range(1, time-1):
-      speed = 0
-      distance = 0
-      hold_time = i
+for i in range(1, time-1):
+   speed = 0
+   distance = 0
+   hold_time = i
 
-      speed += hold_time
-      travel_time = time - hold_time
+   speed += hold_time
+   travel_time = time - hold_time
 
-      while travel_time > 0:
-         distance+=speed
-         travel_time-=1
-      if distance > max_distances[idx]:
-         num_of_ways+=1
-   sum*=num_of_ways
+   distance += speed * travel_time
+   
+   if distance > max_distance:
+      num_of_ways+=1
 
-print("Sum: ", sum)
+print(num_of_ways)
