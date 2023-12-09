@@ -21,7 +21,7 @@ posibilities = "AKQJT98765432"
 all_hands = []
 
 # Revers the alpahabetical sort order
-letter_map = {"T": "A", "J": "B", "Q": "C", "K": "D", "A": "E"}
+letter_map = {"T": "A", "J": ".", "Q": "C", "K": "D", "A": "E"}
 
 sum = 0
 
@@ -37,28 +37,67 @@ with open("input.txt") as file:
       all_hands.append(curr_hand)
 
       types = []
+      joker_count = curr_hand.cards.count("J")
       for char in posibilities:
          count = curr_hand.cards.count(char)
          if count > 0:
             types.append(count)
-
-      if 5 in types:
+      
+      if 5 in types or joker_count == 5:
          curr_hand.strength = 7
-      elif 4 in types:
-         curr_hand.strength = 6
+      if 4 in types:
+         if joker_count > 0:
+            curr_hand.strength = 7
+         else:
+            curr_hand.strength = 6
 
       elif 3 in types:
-         if 2 in types:
-            curr_hand.strength = 5
+         if joker_count == 1:
+            curr_hand.strength = 6
+         elif joker_count == 2:
+            curr_hand.strength = 7
+         elif joker_count == 3:
+            if 2 in types:
+               curr_hand.strength = 7
+            else:
+               curr_hand.strength = 6
          else:
-            curr_hand.strength = 4
-   
+            if 2 in types:
+               curr_hand.strength = 5
+            else:
+               curr_hand.strength = 4
+
       elif 2 in types and types.count(2) == 2:
-         curr_hand.strength = 3
+         if joker_count == 1:
+            curr_hand.strength = 5
+         elif joker_count == 2:
+            curr_hand.strength = 6
+         elif joker_count == 3:
+            curr_hand.strength = 7
+         else:
+            curr_hand.strength = 3
+
       elif 2 in types:
-         curr_hand.strength = 2
+         if joker_count == 1:
+            curr_hand.strength = 4
+         elif joker_count == 2:
+            curr_hand.strength = 4
+         elif joker_count == 3:
+            curr_hand.strength = 7
+         else:
+            curr_hand.strength = 2
+         
       elif 1 in types:
-         curr_hand.strength = 1
+         if joker_count == 1:
+            curr_hand.strength = 2
+         elif joker_count == 2:
+            curr_hand.strength = 4
+         elif joker_count == 3:
+            curr_hand.strength = 6
+         elif joker_count == 4:
+            curr_hand.strength = 7
+         else:
+            curr_hand.strength = 1
 
 
 # First sort by strength and then by get_strength
