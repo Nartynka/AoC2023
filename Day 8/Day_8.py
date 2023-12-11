@@ -1,37 +1,52 @@
-import re, sys
-sys.setrecursionlimit(25000)
+from math import gcd
+
+directions, _, *rest = open("input.txt").read().splitlines()
 sum = 0
 
-file = open("input.txt")
-directions = file.readline().strip()
-file.readline()
-lines = file.readlines()
+# key: [left, right]
+network = {}
 
-str_to_search = "AAA"
+for line in rest:
+   pos, targets = line.split(" = ")
+   # Remove parentheses and split
+   network[pos] = targets[1:-1].split(", ")
 
-dir_idx = 0
+start_positions = [pos for pos in network if pos.endswith("A")]
+cycles = []
 
-def find_next_direction():
-   global str_to_search, dir_idx, sum
-   for line in lines:
-      line = line.strip()
-      if re.search("^"+str_to_search, line):
-         line = line.split(" = ")[1]
-         left, right = line.strip("(").strip(")").split(", ")
+for current in start_positions:
+   cycle = []
+
+   dir_idx = 0
+   steps_count = 0
+   first_z = None
+   while True:
+      while steps_count == 0 or not current.endswith("Z"):
+         steps_count += 1
          if directions[dir_idx] == "L":
-            str_to_search = left
-         elif directions[dir_idx] == "R":
-            str_to_search = right
-         if dir_idx >= len(directions)-1:
-            dir_idx = 0
+            current = network[current][0]
          else:
-            dir_idx+=1
-         sum+=1
-         if str_to_search != "ZZZ":
-            find_next_direction()
+            current = network[current][1]
+         dir_idx+=1
+         if dir_idx >= len(directions):
+            dir_idx = 0
+      cycle.append(steps_count)
+      if first_z is None:
+         first_z = current
+         steps_count = 0
+      elif first_z == current:
          break
 
-find_next_direction()
-print("Steps:", sum)
+   cycles.append(cycle)
 
+# Add only first element from each cycle
+nums = [cycle[0] for cycle in cycles]
 
+NWW = nums.pop() 
+
+for num in nums:
+   # // divides and then rounds down :pog:
+   # LCM = NWW, GCD = NWD
+   NWW = (NWW * num) // gcd(NWW, num)
+
+print(NWW)
